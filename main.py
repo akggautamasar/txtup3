@@ -265,6 +265,8 @@ async def account_login(bot: Client, m: Message):
             else:
                 ytf = f"b[height<={raw_text2}]/bv[height<={raw_text2}]+ba/b/bv+ba"
 
+            if "utkarshapp" in url:
+                cmd = f'yt-dlp -o "{name}.mp4" "{url}"'
             if "jw-prod" in url:
                 cmd = f'yt-dlp -o "{name}.mp4" "{url}"'
             else:
