@@ -19,7 +19,7 @@
 #  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE
-
+from pyrogram.errors.exceptions.bad_request_400 import StickerEmojiInvalid
 import requests
 import json
 import subprocess
@@ -41,94 +41,16 @@ from pyrogram.types import User, Message
 import sys
 import re
 import os
-from logging.handlers import RotatingFileHandler
-import logging
-
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format=
-    "%(asctime)s - %(levelname)s - %(message)s [%(filename)s:%(lineno)d]",
-    datefmt="%d-%b-%y %H:%M:%S",
-    handlers=[
-        RotatingFileHandler("Assist.txt", maxBytes=50000000, backupCount=10),
-        logging.StreamHandler(),
-    ],
-)
-logging.getLogger("pyrogram").setLevel(logging.WARNING)
-
-
-logging = logging.getLogger()
-
 
 app = Client("my_bot",
-             bot_token=os.environ.get("BOT_TOKEN"),
-             api_id=int(os.environ.get("API_ID")),
-             api_hash=os.environ.get("API_HASH"))
-auth_users = [5839999461,832829921]
-sudo_users = auth_users
-sudo_groups = [-1001911553062]
-
-shell_usage = f"**USAGE:** Executes terminal commands directly via bot.\n\n<pre>/shell pip install requests</pre>"
-def one(user_id):
-    if user_id in sudo_users:
-        return True
-    return False
-@app.on_message(filters.command(["shell"]))
-async def shell(client, message: Message):
-    """
-    Executes terminal commands via bot.
-    """
-    logging.info('hh')
-    if not one(message.from_user.id):
-        return
-
-    if len(message.command) < 2:
-        return await message.reply_text(shell_usage, quote=True)
-
-    user_input = message.text.split(None, 1)[1].split(" ")
-
-    try:
-        shell = subprocess.Popen(
-            user_input, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-        )
-
-        stdout, stderr = shell.communicate()
-        result = str(stdout.decode().strip()) + str(stderr.decode().strip())
-
-    except Exception as error:
-        logging.info(f"{error}")
-        return await message.reply_text(f"**Error**:\n\n{error}", quote=True)
-
-    if len(result) > 2000:
-        file = BytesIO(result.encode())
-        file.name = "output.txt"
-        await message.reply_text("Output is too large (Sending it as File)", quote=True)
-        await client.send_document(message.chat.id, file, caption=file.name)
-    else:
-        await message.reply_text(f"**Output:**:\n\n{result}", quote=True)
-
-
-
-keyboard = InlineKeyboardMarkup(
-    [
-        [
-            InlineKeyboardButton(
-                text="Devloper",
-                url="",
-            ),
-            InlineKeyboardButton(
-                text="Repo",
-                url="https://github.com/",
-            ),
-        ],
-    ]
-)
+             bot_token= "5894125512:AAHXBJw9VqzKRW1II5AWJdTbjEXjwm8gBt8",
+             api_id= 28670461,
+             api_hash= "567928418b74baa88b23c0d603e66907")
 
 
 @app.on_message(filters.command(["start"]))
 async def account_login(bot: Client, m: Message):
-    editable = await m.reply_text(f"Hello [{m.from_user.first_name}](tg://user?id={m.from_user.id})\nPress /yogesh")
+    editable = await m.reply_text(f"Hello [{m.from_user.first_name}](tg://user?id={m.from_user.id})\nPress /covid")
 
 
 @app.on_message(filters.command("stop"))
@@ -138,19 +60,12 @@ async def restart_handler(_, m):
 
 
 
-@app.on_message(filters.command(["yogesh"]))
+@app.on_message(filters.command(["covid"]))
 async def account_login(bot: Client, m: Message):
-    user = m.from_user.id if m.from_user is not None else None
-    if user is not None and user not in sudo_users:
-        await m.reply("sorry", quote=True)
-        return
-    else:
-        editable = await m.reply_text(
-            "send text file🗃️")
+    editable = await m.reply_text('Send TXT file for download')
     input: Message = await bot.listen(editable.chat.id)
     x = await input.download()
     await input.delete(True)
-    logging.info(2333)
 
 
 
@@ -246,9 +161,6 @@ async def account_login(bot: Client, m: Message):
                         text = await resp.text()
                         url = re.search(r"(https://.*?playlist.m3u8.*?)\"", text).group(1)
 
-            elif 'tencdn.classplusapp' in url:
-             url = requests.get(f'https://api.classplusapp.com/cams/uploader/video/jw-signed-url?url={url}', headers={'x-access-token': 'eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgzNjkyMTIsIm9yZ0lkIjoyNjA1LCJ0eXBlIjoxLCJtb2JpbGUiOiI5MTcwODI3NzQyODkiLCJuYW1lIjoiQWNlIiwiZW1haWwiOm51bGwsImlzRmlyc3RMb2dpbiI6dHJ1ZSwiZGVmYXVsdExhbmd1YWdlIjpudWxsLCJjb3VudHJ5Q29kZSI6IklOIiwiaXNJbnRlcm5hdGlvbmFsIjowLCJpYXQiOjE2NDMyODE4NzcsImV4cCI6MTY0Mzg4NjY3N30.hM33P2ai6ivdzxPPfm01LAd4JWv-vnrSxGXqvCirCSpUfhhofpeqyeHPxtstXwe0'}).json()['url']
-                
             elif 'videos.classplusapp' in url:
              url = requests.get(f'https://api.classplusapp.com/cams/uploader/video/jw-signed-url?url={url}', headers={'x-access-token': 'eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgzNjkyMTIsIm9yZ0lkIjoyNjA1LCJ0eXBlIjoxLCJtb2JpbGUiOiI5MTcwODI3NzQyODkiLCJuYW1lIjoiQWNlIiwiZW1haWwiOm51bGwsImlzRmlyc3RMb2dpbiI6dHJ1ZSwiZGVmYXVsdExhbmd1YWdlIjpudWxsLCJjb3VudHJ5Q29kZSI6IklOIiwiaXNJbnRlcm5hdGlvbmFsIjowLCJpYXQiOjE2NDMyODE4NzcsImV4cCI6MTY0Mzg4NjY3N30.hM33P2ai6ivdzxPPfm01LAd4JWv-vnrSxGXqvCirCSpUfhhofpeqyeHPxtstXwe0'}).json()['url']
 
@@ -264,8 +176,6 @@ async def account_login(bot: Client, m: Message):
             else:
                 ytf = f"b[height<={raw_text2}]/bv[height<={raw_text2}]+ba/b/bv+ba"
 
-            if "utkarshapp" in url:
-                cmd = f'yt-dlp -o "{name}.mp4" "{url}"'
             if "jw-prod" in url:
                 cmd = f'yt-dlp -o "{name}.mp4" "{url}"'
             else:
@@ -319,5 +229,5 @@ async def account_login(bot: Client, m: Message):
         await m.reply_text(e)
     await m.reply_text("Done")
 
-
 app.run()
+                    
