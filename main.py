@@ -61,7 +61,7 @@ logging.getLogger("pyrogram").setLevel(logging.WARNING)
 logging = logging.getLogger()
 
 
-bot = Client("bot",
+app = Client("my_bot",
              bot_token=os.environ.get("BOT_TOKEN"),
              api_id=int(os.environ.get("API_ID")),
              api_hash=os.environ.get("API_HASH"))
@@ -74,7 +74,7 @@ def one(user_id):
     if user_id in sudo_users:
         return True
     return False
-@bot.on_message(filters.command(["shell"]))
+@app.on_message(filters.command(["shell"]))
 async def shell(client, message: Message):
     """
     Executes terminal commands via bot.
@@ -126,19 +126,19 @@ keyboard = InlineKeyboardMarkup(
 )
 
 
-@bot.on_message(filters.command(["start"]))
+@app.on_message(filters.command(["start"]))
 async def account_login(bot: Client, m: Message):
     editable = await m.reply_text(f"Hello [{m.from_user.first_name}](tg://user?id={m.from_user.id})\nPress /yogesh")
 
 
-@bot.on_message(filters.command("stop"))
+@app.on_message(filters.command("stop"))
 async def restart_handler(_, m):
     await m.reply_text("**STOPPED**🚦", True)
     os.execl(sys.executable, sys.executable, *sys.argv)
 
 
 
-@bot.on_message(filters.command(["yogesh"]))
+@app.on_message(filters.command(["yogesh"]))
 async def account_login(bot: Client, m: Message):
     user = m.from_user.id if m.from_user is not None else None
     if user is not None and user not in sudo_users:
