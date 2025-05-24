@@ -43,7 +43,7 @@ import re
 import os
 
 API_ID = 22649259
-API_HASH = ""
+API_HASH = "545169590ffbfe0bf8bade55e3a1cfde"
 BOT_TOKEN = ""
 AUTH_USERS = 6221765779,832829921
 sudo_users = [6221765779,832829921]
